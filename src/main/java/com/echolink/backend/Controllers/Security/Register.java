@@ -63,7 +63,12 @@ public class Register {
         token.setExpiresAt(LocalDateTime.now().plusMinutes(10));
         tokenRepo.save(token);
 
-        mailService.sendVerificationCode(email, code);
+        try {
+            mailService.sendVerificationCode(email, code);
+
+        } catch (Exception mailError) {
+            System.err.println("Email send failed: " + mailError.getMessage());
+        }
     }
 
     @PostMapping("/verify-email")
