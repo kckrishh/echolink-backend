@@ -20,9 +20,6 @@ WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
 
-# Render injects PORT automatically
-ENV PORT=8080
-
 EXPOSE 8080
 
 CMD ["sh", "-c", "java -Dserver.port=${PORT} -jar app.jar"]
