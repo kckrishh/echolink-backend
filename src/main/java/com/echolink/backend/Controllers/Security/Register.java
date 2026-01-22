@@ -37,7 +37,7 @@ public class Register {
         this.mailService = mailService;
     }
 
-    @PostMapping("register-start")
+    @PostMapping("/register-start")
     public void registerAccount(@RequestBody RegisterStartRequestDto dto) {
         String email = dto.email().trim().toLowerCase();
         if (userRepo.existsByEmail(email)) {

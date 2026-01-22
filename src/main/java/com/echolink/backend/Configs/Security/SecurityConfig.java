@@ -2,6 +2,7 @@ package com.echolink.backend.Configs.Security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -26,7 +27,9 @@ public class SecurityConfig {
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/register-start", "/auth/verify-email",
                                 "/auth/complete-profile", "/auth/token/refresh", "/ws/**")
-                        .permitAll().anyRequest().authenticated())
+                        .permitAll().requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS preflight
+                        .requestMatchers("/**/*.{js,css,html,ico,png,jpg,svg}").permitAll().anyRequest()
+                        .authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter,
                         UsernamePasswordAuthenticationFilter.class)
