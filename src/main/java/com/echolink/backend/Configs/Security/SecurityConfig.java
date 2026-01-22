@@ -26,9 +26,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/register-start", "/auth/verify-email",
-                                "/auth/complete-profile", "/auth/token/refresh", "/ws/**")
-                        .permitAll().requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS preflight
-                        .requestMatchers("/**/*.{js,css,html,ico,png,jpg,svg}").permitAll().anyRequest()
+                                "/auth/complete-profile", "/auth/token/refresh", "/ws/**",
+                                "/*.js",
+                                "/*.css",
+                                "/*.html",
+                                "/*.ico",
+                                "/*.png", "/*.jpg", "/*.svg",
+                                "/static/**",
+                                "/assets/**")
+                        .permitAll().requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll().anyRequest()
                         .authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter,
