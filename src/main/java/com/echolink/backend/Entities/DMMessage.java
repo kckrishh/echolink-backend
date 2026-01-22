@@ -1,0 +1,40 @@
+package com.echolink.backend.Entities;
+
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
+
+@Entity
+@Data
+public class DMMessage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn
+    private DMConversation conversation;
+
+    @ManyToOne
+    @JoinColumn(name = "sentBy")
+    private User sentBy;
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    private boolean edited;
+}
