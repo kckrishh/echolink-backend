@@ -23,11 +23,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeRequests(auth -> auth.requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/auth/register-start").permitAll()
-                        .requestMatchers("/auth/verify-email").permitAll()
-                        .requestMatchers("/auth/complete-profile").permitAll()
-                        .requestMatchers("/auth/token/refresh").permitAll().requestMatchers("/ws/**")
+                .authorizeRequests(auth -> auth
+                        .requestMatchers("/auth/login", "/auth/register-start", "/auth/verify-email",
+                                "/auth/complete-profile", "/auth/token/refresh", "/ws/**")
                         .permitAll().anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter,
@@ -40,6 +38,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("https://echolink-frontend.vercel.app");
+        config.addAllowedOriginPattern("https://*.vercel.app");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
