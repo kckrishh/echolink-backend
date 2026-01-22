@@ -23,7 +23,7 @@ public class SmtpEmailService {
 
       helper.setTo(toEmail);
       helper.setSubject("Verify your EchoLink account");
-      helper.setFrom("EchoLink <no-reply@echolink.com>");
+      helper.setFrom("coderkrish123@gmail.com");
 
       helper.setText(buildHtml(code), true); // true = HTML
 
