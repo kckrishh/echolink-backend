@@ -77,10 +77,18 @@ public class Auth {
     @GetMapping("token/refresh")
     public ResponseEntity<?> refresh(@CookieValue(name = "refresh_token", required = false) String refreshToken) {
         System.out.println("request reached");
+        System.out.println("REFRESH COOKIE RECEIVED: " + refreshToken);
         if (refreshToken == null) {
             return ResponseEntity.status(401).body(("Missing refresh token"));
         }
-        String username = refreshTokenService.validateAndGetUsername(refreshToken);
+        String username;
+        try {
+            username = refreshTokenService.validateAndGetUsername(refreshToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(401).body("Invalid refresh token");
+        }
+        System.out.println("REFRESH TOKEN VALID FOR USER: " + username);
 
         UserDetails userDetails = userDetailsManager.loadUserByUsername(username);
         String newAccessToken = JWTUtil.generateToken(userDetails);
