@@ -53,6 +53,8 @@ public class HelperMethods {
         participant.setMuted(false);
         participant.setBlocked(false);
         participant = participantRepo.save(participant);
+
+        conversation.getDmParticipants().add(participant);
         return participant;
     }
 

@@ -1,6 +1,7 @@
 package com.echolink.backend.Entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,9 +38,9 @@ public class DMConversation {
     private Long lastMessageSenderId;
 
     @OneToMany(mappedBy = "conversation")
-    private List<DMParticipant> dmParticipants;
+    private List<DMParticipant> dmParticipants = new ArrayList<>();
 
     @OneToMany(mappedBy = "conversation")
-    private List<DMMessage> dmMessages;
+    private List<DMMessage> dmMessages = new ArrayList<>();
 
 }
