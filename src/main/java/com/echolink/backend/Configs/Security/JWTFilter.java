@@ -29,6 +29,17 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String token = request.getHeader(HEADER);
+
+        String path = request.getServletPath();
+
+        if (path.startsWith("/auth/login") ||
+                path.startsWith("/auth/token/refresh") ||
+                path.startsWith("/auth/token/logout") ||
+                path.startsWith("/error") ||
+                path.startsWith("/ws")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
 

@@ -25,7 +25,7 @@ public class SecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register-start", "/auth/verify-email",
+                        .requestMatchers("/auth/login", "/auth/register-start", "/auth/verify-email", "/error",
                                 "/auth/complete-profile", "/auth/token/refresh", "/ws/**",
                                 "/*.js",
                                 "/*.css",
