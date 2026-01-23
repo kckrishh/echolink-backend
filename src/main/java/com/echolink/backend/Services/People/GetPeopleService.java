@@ -77,6 +77,7 @@ public class GetPeopleService {
         for (DMParticipant participant : participants) {
             if (participant.getUser().getUsername().equals(currentUser.getUsername())) {
                 searchPeopleResponseDto.setStatus(participant.getStatus());
+                break;
             }
         }
         System.out.println(searchPeopleResponseDto);
