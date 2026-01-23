@@ -40,6 +40,7 @@ public class RefreshTokenService {
         return refreshToken.getToken();
     }
 
+    @Transactional
     public String validateAndGetUsername(String token) {
         RefreshToken refreshToken = refreshTokenRepo.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
