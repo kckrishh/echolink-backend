@@ -24,6 +24,8 @@ import com.echolink.backend.Repo.DMConversationRepo;
 import com.echolink.backend.Repo.DMParticipantRepo;
 import com.echolink.backend.Repo.UserRepo;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class DMConversationService {
     private final UserRepo userRepo;
@@ -188,6 +190,7 @@ public class DMConversationService {
         return ResponseEntity.ok(conversationDto);
     }
 
+    @Transactional
     public SeenDto markAsReadAndReturnSeen(Long conversationId) {
         User currentUser = helperMethods.getCurrentUser();
         helperMethods.requireCompleteUser(currentUser);
