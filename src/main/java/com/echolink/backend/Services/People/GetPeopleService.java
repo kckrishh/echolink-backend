@@ -19,6 +19,8 @@ import com.echolink.backend.Repo.DMParticipantRepo;
 import com.echolink.backend.Repo.UserRepo;
 import com.echolink.backend.Services.Chat.DM.DMConversationService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class GetPeopleService {
     private final UserRepo userRepo;
@@ -36,6 +38,7 @@ public class GetPeopleService {
         this.dmParticipantRepo = dmParticipantRepo;
     }
 
+    @Transactional
     public ResponseEntity<SearchPeopleResponseDto> search(String query) {
         User currentUser = helperMethods.getCurrentUser();
         helperMethods.requireCompleteUser(currentUser);
