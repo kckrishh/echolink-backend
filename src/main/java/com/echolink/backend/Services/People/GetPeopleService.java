@@ -43,7 +43,14 @@ public class GetPeopleService {
         User currentUser = helperMethods.getCurrentUser();
         helperMethods.requireCompleteUser(currentUser);
 
+        if (currentUser == null) {
+            System.out.println("current user not found");
+        }
+
         User otherUser = userRepo.findByUsername(query);
+        if (otherUser == null) {
+            System.out.println("Other user not found");
+        }
 
         Long currentUserId = currentUser.getId();
         Long otherUserId = otherUser.getId();
@@ -54,7 +61,7 @@ public class GetPeopleService {
         searchPeopleResponseDto.setBio(otherUser.getBio());
         searchPeopleResponseDto.setAvatar(otherUser.getAvatar());
 
-        String pairKey = currentUserId + "_" + otherUserId;
+        String pairKey = helperMethods.getPairKeyOfDMConversation(currentUserId, otherUserId);
         DMConversation dmConversation = conversationRepo.findByPairKey(pairKey);
 
         if (dmConversation == null) {
