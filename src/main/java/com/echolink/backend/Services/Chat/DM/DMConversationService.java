@@ -43,6 +43,7 @@ public class DMConversationService {
         this.helperMethods = helperMethods;
     }
 
+    @Transactional
     public ResponseEntity<ConversationResponseDto> startConversation(@RequestBody ConversationRequestDto requestDto) {
         User currentUser = helperMethods.getCurrentUser();
         helperMethods.requireCompleteUser(currentUser);
@@ -88,6 +89,7 @@ public class DMConversationService {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     public ResponseEntity<List<ConversationDto>> getConversations() {
         User currentUser = helperMethods.getCurrentUser();
 
@@ -128,6 +130,7 @@ public class DMConversationService {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional
     public ResponseEntity<List<ConversationDto>> getPendingConversations() {
         User currentUser = helperMethods.getCurrentUser();
         helperMethods.requireCompleteUser(currentUser);
@@ -166,6 +169,7 @@ public class DMConversationService {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional
     public ResponseEntity<ConversationDto> getSingleConversation(Long id) {
         User currentUser = helperMethods.getCurrentUser();
         helperMethods.requireCompleteUser(currentUser);

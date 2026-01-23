@@ -49,6 +49,7 @@ public class DMMessageService {
         this.helperMethods = helperMethods;
     }
 
+    @Transactional
     public SendMessageResult sendMessage(MessageRequestDto messageRequestDto, Principal principal) throws Exception {
         Long currentUserId = Long.parseLong(principal.getName());
         User currentUser = userRepo.findById(currentUserId)
@@ -127,6 +128,7 @@ public class DMMessageService {
         return sendMessageResult;
     }
 
+    @Transactional
     public ResponseEntity<List<MessageDto>> getMessages(Long conversationId) {
         DMConversation conversation = conversationRepo.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found to load message"));
