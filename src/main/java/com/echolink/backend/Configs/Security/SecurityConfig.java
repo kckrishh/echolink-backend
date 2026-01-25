@@ -48,7 +48,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("https://echolink-frontend.vercel.app");
-        config.addAllowedOrigin("https://echolink-bp73.onrender.com");
+        config.addAllowedOrigin("https://echolink-rb73.onrender.com");
         config.addAllowedOriginPattern("https://*.vercel.app");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
