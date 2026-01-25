@@ -66,8 +66,9 @@ public class Auth {
         ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("None")
+                .sameSite("Lax")
                 .path("/")
+                .domain(".echolink.live")
                 .maxAge(Duration.ofDays(7))
                 .build();
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -104,9 +105,10 @@ public class Auth {
         ResponseCookie cookie = ResponseCookie.from("refresh_token", "")
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("None")
+                .sameSite("Lax")
                 .path("/")
-                .maxAge(0)
+                .domain(".echolink.live")
+                .maxAge(Duration.ofDays(7))
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
