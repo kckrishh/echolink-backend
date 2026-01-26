@@ -1,11 +1,13 @@
 package com.echolink.backend.Entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
-import org.hibernate.annotations.CreationTimestamp;
+import com.echolink.backend.Enums.ReactionType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,26 +18,23 @@ import lombok.Data;
 
 @Entity
 @Data
-public class DMMessage {
+public class MessageReaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private DMConversation conversation;
+    @JoinColumn(nullable = false, name = "message_id")
+    private DMMessage message;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sentBy")
-    private User sentBy;
+    @JoinColumn(nullable = false, name = "reactedBy_id")
+    private User reactedBy;
 
-    @Column(columnDefinition = "TEXT")
-    private String content;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReactionType reactionType;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    private boolean edited;
+    @Column(name = "created_At")
+    private Instant createdAt = Instant.now();
 }

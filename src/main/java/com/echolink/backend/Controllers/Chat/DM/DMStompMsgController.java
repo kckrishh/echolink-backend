@@ -2,13 +2,17 @@ package com.echolink.backend.Controllers.Chat.DM;
 
 import java.security.Principal;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.echolink.backend.Dtos.DM.Message.MessageDto;
+import com.echolink.backend.Dtos.DM.Message.MessageReactionWrapper;
 import com.echolink.backend.Dtos.DM.Message.MessageRequestDto;
+import com.echolink.backend.Dtos.DM.Message.ReactionRequestDto;
+import com.echolink.backend.Dtos.DM.Message.ReactionResponseDto;
 import com.echolink.backend.Dtos.DM.Message.SendMessageResult;
 import com.echolink.backend.Dtos.DM.Message.TypingDto;
 import com.echolink.backend.Dtos.DM.Message.TypingResult;
@@ -16,6 +20,7 @@ import com.echolink.backend.Entities.User;
 import com.echolink.backend.Entities.WSEvent;
 import com.echolink.backend.Repo.UserRepo;
 import com.echolink.backend.Services.Chat.DM.DMMessageService;
+import com.echolink.backend.Services.Chat.DM.MessageReactionService;
 
 @Controller
 public class DMStompMsgController {
@@ -23,12 +28,14 @@ public class DMStompMsgController {
     private final DMMessageService messageService;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserRepo userRepo;
+    private final MessageReactionService reactionService;
 
     public DMStompMsgController(DMMessageService messageService, SimpMessagingTemplate messagingTemplate,
-            UserRepo userRepo) {
+            UserRepo userRepo, MessageReactionService reactionService) {
         this.messageService = messageService;
         this.messagingTemplate = messagingTemplate;
         this.userRepo = userRepo;
+        this.reactionService = reactionService;
     }
 
     @MessageMapping("/chat.sendMessage")
@@ -49,5 +56,16 @@ public class DMStompMsgController {
         TypingDto response = result.getDto();
         this.messagingTemplate.convertAndSendToUser(result.getOtherUserId().toString(), "/queue/typing",
                 new WSEvent<>("DM_TYPING", response));
+    }
+
+    @MessageMapping("/chat.reaction")
+    public void toggleReaction(ReactionRequestDto dto) {
+        MessageReactionWrapper wrapper = this.reactionService.toggleReaction(dto);
+
+        this.messagingTemplate.convertAndSendToUser(wrapper.getOtherUserId().toString(), "/queue/reaction",
+                new WSEvent<>("DM_REACTION", wrapper.getDto()));
+        this.messagingTemplate.convertAndSendToUser(wrapper.getDto().getReactedBy().toString(), "/queue/reaction",
+                new WSEvent<>("DM_REACTION", wrapper.getDto()));
+
     }
 }

@@ -2,7 +2,9 @@ package com.echolink.backend.Services.Chat.DM;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.boot.model.TypeDefinitionRegistryStandardImpl;
 import org.springframework.http.HttpStatus;
@@ -13,18 +15,21 @@ import org.springframework.web.server.ResponseStatusException;
 import com.echolink.backend.Controllers.Chat.DM.HelperMethods;
 import com.echolink.backend.Dtos.DM.Message.MessageDto;
 import com.echolink.backend.Dtos.DM.Message.MessageRequestDto;
+import com.echolink.backend.Dtos.DM.Message.ReactionDto;
 import com.echolink.backend.Dtos.DM.Message.SendMessageResult;
 import com.echolink.backend.Dtos.DM.Message.TypingDto;
 import com.echolink.backend.Dtos.DM.Message.TypingResult;
 import com.echolink.backend.Entities.DMConversation;
 import com.echolink.backend.Entities.DMMessage;
 import com.echolink.backend.Entities.DMParticipant;
+import com.echolink.backend.Entities.MessageReaction;
 import com.echolink.backend.Entities.User;
 import com.echolink.backend.Enums.MessageStatus;
 import com.echolink.backend.Enums.ParticipantStatus;
 import com.echolink.backend.Repo.DMConversationRepo;
 import com.echolink.backend.Repo.DMMessageRepo;
 import com.echolink.backend.Repo.DMParticipantRepo;
+import com.echolink.backend.Repo.MessageReactionRepo;
 import com.echolink.backend.Repo.UserRepo;
 
 import jakarta.transaction.Transactional;
@@ -37,16 +42,18 @@ public class DMMessageService {
     private final DMParticipantRepo participantRepo;
     private final DMMessageRepo messageRepo;
     private final HelperMethods helperMethods;
+    private final MessageReactionRepo reactionRepo;
 
     // private final HelperMethods helperMethods = new Help
 
     public DMMessageService(UserRepo userRepo, DMConversationRepo conversationRepo, DMParticipantRepo participantRepo,
-            DMMessageRepo messageRepo, HelperMethods helperMethods) {
+            DMMessageRepo messageRepo, HelperMethods helperMethods, MessageReactionRepo reactionRepo) {
         this.userRepo = userRepo;
         this.conversationRepo = conversationRepo;
         this.participantRepo = participantRepo;
         this.messageRepo = messageRepo;
         this.helperMethods = helperMethods;
+        this.reactionRepo = reactionRepo;
     }
 
     @Transactional
@@ -141,6 +148,19 @@ public class DMMessageService {
         }
 
         List<DMMessage> messages = conversation.getDmMessages();
+        List<MessageReaction> allReactions = reactionRepo.findByMessage_Conversation_Id(conversationId);
+
+        Map<Long, List<ReactionDto>> reactionsByMessageId = new HashMap<>();
+        for (MessageReaction r : allReactions) {
+            Long msgId = r.getMessage().getId();
+
+            ReactionDto dto = new ReactionDto();
+            dto.setType(r.getReactionType());
+            dto.setReactedById(r.getReactedBy().getId());
+            reactionsByMessageId
+                    .computeIfAbsent(msgId, k -> new ArrayList<>())
+                    .add(dto);
+        }
 
         List<MessageDto> result = new ArrayList<>();
 
@@ -153,6 +173,7 @@ public class DMMessageService {
             dto.setSenderId(message.getSentBy().getId());
             dto.setSenderUsername(message.getSentBy().getUsername());
             dto.setSenderAvatar(message.getSentBy().getAvatar());
+            dto.setReactions(reactionsByMessageId.getOrDefault(message.getId(), new ArrayList<>()));
 
             result.add(dto);
         }

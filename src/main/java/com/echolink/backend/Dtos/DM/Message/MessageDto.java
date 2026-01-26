@@ -1,6 +1,7 @@
 package com.echolink.backend.Dtos.DM.Message;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Data;
 
@@ -13,4 +14,5 @@ public class MessageDto {
     Long senderId;
     String senderUsername;
     String senderAvatar;
+    List<ReactionDto> reactions;
 }
