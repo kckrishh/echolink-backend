@@ -59,8 +59,8 @@ public class DMStompMsgController {
     }
 
     @MessageMapping("/chat.reaction")
-    public void toggleReaction(ReactionRequestDto dto) {
-        MessageReactionWrapper wrapper = this.reactionService.toggleReaction(dto);
+    public void toggleReaction(ReactionRequestDto dto, Principal principal) {
+        MessageReactionWrapper wrapper = this.reactionService.toggleReaction(dto, principal);
 
         this.messagingTemplate.convertAndSendToUser(wrapper.getOtherUserId().toString(), "/queue/reaction",
                 new WSEvent<>("DM_REACTION", wrapper.getDto()));
