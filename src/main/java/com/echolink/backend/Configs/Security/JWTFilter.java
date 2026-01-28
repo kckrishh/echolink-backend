@@ -34,7 +34,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         if (path.startsWith("/auth/login") ||
                 path.startsWith("/auth/token/refresh") ||
-                path.startsWith("/auth/token/logout") ||
                 path.startsWith("/error") ||
                 path.startsWith("/ws")) {
             filterChain.doFilter(request, response);
