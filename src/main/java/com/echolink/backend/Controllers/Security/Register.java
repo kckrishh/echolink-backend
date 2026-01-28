@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +18,7 @@ import com.echolink.backend.Entities.User;
 import com.echolink.backend.Enums.SignUpState;
 import com.echolink.backend.Repo.EmailVerificationTokenRepo;
 import com.echolink.backend.Repo.UserRepo;
-import com.echolink.backend.Services.Mail.SmtpEmailService;
+import com.echolink.backend.Services.Mail.EmailService;
 
 import jakarta.transaction.Transactional;
 
@@ -29,9 +28,9 @@ public class Register {
 
     private final UserRepo userRepo;
     private final EmailVerificationTokenRepo tokenRepo;
-    private final SmtpEmailService mailService;
+    private final EmailService mailService;
 
-    public Register(UserRepo userRepo, EmailVerificationTokenRepo tokenRepo, SmtpEmailService mailService) {
+    public Register(UserRepo userRepo, EmailVerificationTokenRepo tokenRepo, EmailService mailService) {
         this.userRepo = userRepo;
         this.tokenRepo = tokenRepo;
         this.mailService = mailService;
@@ -64,7 +63,7 @@ public class Register {
         tokenRepo.save(token);
 
         try {
-            mailService.sendVerificationCode(email, code);
+            mailService.sendVerificationEmail(email, code);
 
         } catch (Exception mailError) {
             System.err.println("Email send failed: " + mailError.getMessage());

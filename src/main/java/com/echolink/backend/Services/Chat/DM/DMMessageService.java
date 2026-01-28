@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.boot.model.TypeDefinitionRegistryStandardImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,6 @@ import com.echolink.backend.Entities.DMMessage;
 import com.echolink.backend.Entities.DMParticipant;
 import com.echolink.backend.Entities.MessageReaction;
 import com.echolink.backend.Entities.User;
-import com.echolink.backend.Enums.MessageStatus;
 import com.echolink.backend.Enums.ParticipantStatus;
 import com.echolink.backend.Repo.DMConversationRepo;
 import com.echolink.backend.Repo.DMMessageRepo;
