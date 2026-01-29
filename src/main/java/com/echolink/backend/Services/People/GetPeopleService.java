@@ -85,6 +85,7 @@ public class GetPeopleService {
         return ResponseEntity.ok(searchPeopleResponseDto);
     }
 
+    @Transactional
     public ResponseEntity<List<SearchPeopleResponseDto>> getFriends() {
         User currentUser = helperMethods.getCurrentUser();
         helperMethods.requireCompleteUser(currentUser);
